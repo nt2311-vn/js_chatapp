@@ -8,15 +8,23 @@ const io = new Server(httpServer, {
 		origin: "*",
 	},
 });
+const messageHistory = [];
 
-io.on("connection", (socket) => {
-	console.log(`User ${socket.id} connected`);
+try {
+	io.on("connection", (socket) => {
+		console.log(`User ${socket.id} connected`);
+		socket.emit("messageHistory", messageHistory);
 
-	socket.on("message", (data) => {
-		console.log(data);
-		io.emit("message", `${socket.id.substring(0, 5)}:${data}`);
+		socket.on("message", (message) => {
+			console.log(message);
+			messageHistory.push(message);
+			console.log(messageHistory);
+			io.emit("message", message);
+		});
 	});
-});
+} catch (err) {
+	console.error(err);
+}
 
 httpServer.listen(3500, () => {
 	console.log("Listening on port 3500");

@@ -6,7 +6,12 @@ const sendMessage = (e) => {
 	const input = document.querySelector("input");
 
 	if (input.value) {
-		socket.emit("message", input.value);
+		socket.emit("message", {
+			text: input.value,
+			id: socket.id,
+			timestamp: new Date(),
+		});
+
 		input.value = "";
 	}
 
@@ -15,8 +20,10 @@ const sendMessage = (e) => {
 
 document.querySelector("form").addEventListener("submit", sendMessage);
 
-socket.on("message", (data) => {
-	const li = document.createElement("li");
-	li.textContent = data;
-	document.querySelector("ul").appendChild(li);
+socket.on("messageHistory", (messages) => {
+	messages.forEach((message) => {
+		const li = document.createElement("li");
+		li.textContent = JSON.stringify(message);
+		document.querySelector("ul").appendChild(li);
+	});
 });
