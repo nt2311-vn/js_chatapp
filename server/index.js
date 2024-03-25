@@ -16,10 +16,8 @@ try {
 		socket.emit("messageHistory", messageHistory);
 
 		socket.on("message", (message) => {
-			console.log(message);
 			messageHistory.push(message);
-			console.log(messageHistory);
-			io.emit("message", message);
+			io.emit("message", messageHistory[messageHistory.length - 1]);
 		});
 	});
 } catch (err) {

@@ -20,10 +20,8 @@ const sendMessage = (e) => {
 
 document.querySelector("form").addEventListener("submit", sendMessage);
 
-socket.on("messageHistory", (messages) => {
-	messages.forEach((message) => {
-		const li = document.createElement("li");
-		li.textContent = JSON.stringify(message);
-		document.querySelector("ul").appendChild(li);
-	});
+socket.on("message", ({ timestamp, text }) => {
+	const li = document.createElement("li");
+	li.textContent = `${new Date(timestamp).toLocaleTimeString()}: ${text}`;
+	document.querySelector("ul").appendChild(li);
 });
